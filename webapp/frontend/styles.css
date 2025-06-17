@@ -1,0 +1,14 @@
+/* 
+
+* = universal selector (not class)
+. = class selector
+# = ID selector 
+
+*/
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* optional spacing between fields */
+    max-width: 300px; /* optional: keep it from stretching too wide */
+}
