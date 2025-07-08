@@ -1,2 +1,5 @@
+# Note: PostgreSQL 16+ is needed for webapp/database
+
 django==5.2.3
-# psycopg3 or the async library?
+psycopg[binary]==3.2.9  # allows django to communicate with postgresql DB
+python-decouple==3.8    # gathers environment variables from .env files

@@ -1,0 +1,9 @@
+DO $$
+BEGIN
+   IF NOT EXISTS (
+      SELECT FROM pg_catalog.pg_user WHERE usename = '${DB_USER}'
+   ) THEN
+      CREATE USER ${DB_USER} WITH PASSWORD '${DB_PASS}';
+   END IF;
+END
+$$;
