@@ -1,0 +1,15 @@
+{% extends "forms/base.html" %}
+
+{% block title %}Form | ANNI{% endblock %}
+
+{% block content %}
+  <h1>Submit Something</h1>
+  <form method="post">
+    <!-- Placeholder for future form -->
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="Your name" />
+    <button type="submit">Submit</button>
+  </form>
+
+  <a href="/">Back to Home</a>
+{% endblock %}
