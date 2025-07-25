@@ -1,0 +1,5 @@
+SCOPE : "https://www.googleapis.com/auth/spreadsheets.readonly" #If modifying scope, delete file token.json.
+RANGE_NAME : "Form Responses 1" #Add range of !'first cell':'last cell'
+NAMEINDEX : 1 #Add index of member name location as it is listed in the google sheet.
+TIMEINDEX : 0 #Add index of timestamp created from form submission.
+CUTOFFAGE : 4 #Cutoff age in days for a form response to be used in current calculation
