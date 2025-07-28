@@ -1,5 +1,4 @@
-
-# Change Log – July 23, 2025
+# Change Log – July 21 - July 28, 2025
 
 
 ### ✅ Initial Setup and Fixes
@@ -60,3 +59,15 @@ Each page currently contains test headers and extends the shared base template.
 - Successfully ran development server (`python manage.py runserver`)
 - Confirmed all pages load without error
 - Verified that navigation links work and are correctly routed
+
+---
+
+### ✅ Recent UI and Form Improvements
+
+- Expanded the form on `form.html` to include:
+  - A "Your Name" text input field
+  - A large "Details" textarea field
+  - A file upload input
+- Updated the form layout to use the `.form-container` class for improved appearance
+- Ensured all form elements are styled and centered using the existing `styles.css` in `forms/static/`
+- Verified that the stylesheet is correctly linked and styles are applied to
