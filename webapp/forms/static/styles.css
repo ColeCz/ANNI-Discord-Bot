@@ -35,3 +35,84 @@ main {
 h2 {
   color: #2c3e50;
 }
+
+.form-container {
+  max-width: 400px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 2em 2.5em 1.5em 2.5em;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.form-container h1 {
+  text-align: center;
+  margin-bottom: 1.2em;
+  color: #333;
+}
+
+.form-container label {
+  display: block;
+  margin-top: 1em;
+  margin-bottom: 0.3em;
+  color: #444;
+  font-weight: 500;
+}
+
+.form-container input[type='text'],
+.form-container textarea,
+.form-container input[type='file'] {
+  width: 100%;
+  padding: 0.7em;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1em;
+  margin-bottom: 0.5em;
+  box-sizing: border-box;
+  background: #fafbfc;
+  transition: border 0.2s;
+}
+
+.form-container input[type='text']:focus,
+.form-container textarea:focus {
+  border: 1.5px solid #6c63ff;
+  outline: none;
+}
+
+.form-container textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-container button[type='submit'] {
+  width: 100%;
+  background: #6c63ff;
+  color: #fff;
+  border: none;
+  padding: 0.9em;
+  border-radius: 6px;
+  font-size: 1.1em;
+  font-weight: 600;
+  margin-top: 1em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.form-container button[type='submit']:hover {
+  background: #554ee2;
+}
+
+.form-container .back-link {
+  display: block;
+  text-align: center;
+  margin-top: 1.5em;
+  color: #6c63ff;
+  text-decoration: none;
+  font-size: 1em;
+  transition: color 0.2s;
+}
+
+.form-container .back-link:hover {
+  color: #554ee2;
+  text-decoration: underline;
+}

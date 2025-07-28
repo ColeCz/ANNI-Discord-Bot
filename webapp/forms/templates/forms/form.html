@@ -3,13 +3,21 @@
 {% block title %}Form | ANNI{% endblock %}
 
 {% block content %}
-  <h1>Submit Something</h1>
-  <form method="post">
-    <!-- Placeholder for future form -->
-    {% csrf_token %}
-    <input type="text" name="name" placeholder="Your name" />
-    <button type="submit">Submit</button>
-  </form>
+  <div class="form-container">
+    <h1>Submit Something</h1>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <label for="name">Your Name:</label>
+      <input type="text" id="name" name="name" placeholder="Your name" />
 
-  <a href="/">Back to Home</a>
+      <label for="details">Details:</label>
+      <textarea id="details" name="details" rows="6" placeholder="Enter details here"></textarea>
+
+      <label for="file">Upload a file:</label>
+      <input type="file" id="file" name="file" />
+
+      <button type="submit">Submit</button>
+    </form>
+    <a class="back-link" href="/">Back to Home</a>
+  </div>
 {% endblock %}
