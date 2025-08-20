@@ -1,0 +1,106 @@
+<!-- admin_submission_detail.html -->
+{% extends "forms/base.html" %}
+
+{% block title %}Review Submission #{{ submission.id }} | ANNI{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1>Review Submission #{{ submission.id }}</h1>
+  <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">
+    <i class="fas fa-arrow-left me-1"></i>Back to Admin Dashboard
+  </a>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <!-- Submission Details -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5><i class="fas fa-file-alt me-2"></i>Submission Details</h5>
+      </div>
+      <div class="card-body">
+        <dl class="row">
+          <dt class="col-sm-3">Title:</dt>
+          <dd class="col-sm-9">{{ submission.name }}</dd>
+          
+          <dt class="col-sm-3">Details:</dt>
+          <dd class="col-sm-9">{{ submission.details|linebreaks }}</dd>
+          
+          <dt class="col-sm-3">Submitted By:</dt>
+          <dd class="col-sm-9">
+            {{ submission.user.username }}
+            {% if submission.user.first_name or submission.user.last_name %}
+              ({{ submission.user.first_name }} {{ submission.user.last_name }})
+            {% endif %}
+            <br><small class="text-muted">{{ submission.user.email }}</small>
+          </dd>
+          
+          <dt class="col-sm-3">Created:</dt>
+          <dd class="col-sm-9">{{ submission.created_at|date:"F d, Y \a\t H:i" }}</dd>
+          
+          <dt class="col-sm-3">Last Updated:</dt>
+          <dd class="col-sm-9">{{ submission.updated_at|date:"F d, Y \a\t H:i" }}</dd>
+          
+          {% if submission.file %}
+          <dt class="col-sm-3">File:</dt>
+          <dd class="col-sm-9">
+            <a href="{{ submission.file.url }}" target="_blank" class="btn btn-outline-primary">
+              <i class="fas fa-download me-1"></i>Download File
+            </a>
+          </dd>
+          {% endif %}
+          
+          {% if submission.reviewed_by %}
+          <dt class="col-sm-3">Reviewed By:</dt>
+          <dd class="col-sm-9">{{ submission.reviewed_by.username }}</dd>
+          {% endif %}
+        </dl>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-4">
+    <!-- Status Update Form -->
+    <div class="card">
+      <div class="card-header">
+        <h5><i class="fas fa-edit me-2"></i>Update Status</h5>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="{{ form.status.id_for_label }}" class="form-label">Status</label>
+            {{ form.status }}
+          </div>
+          <div class="mb-3">
+            <label for="{{ form.admin_notes.id_for_label }}" class="form-label">Admin Notes</label>
+            {{ form.admin_notes }}
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save me-1"></i>Update Submission
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Current Status -->
+    <div class="card mt-3">
+      <div class="card-header">
+        <h6>Current Status</h6>
+      </div>
+      <div class="card-body">
+        <span class="badge bg-{% if submission.status == 'approved' %}success{% elif submission.status == 'rejected' %}danger{% elif submission.status == 'in_progress' %}info{% else %}warning{% endif %} fs-6">
+          {{ submission.get_status_display }}
+        </span>
+        {% if submission.admin_notes %}
+          <hr>
+          <strong>Admin Notes:</strong>
+          <p class="small">{{ submission.admin_notes|linebreaks }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

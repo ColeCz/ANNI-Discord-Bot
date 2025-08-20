@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCS Weekly Report</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- <div>
+        <form>
+            <input type="text"> 	Displays a single-line text input field
+            <input type="radio"> 	Displays a radio button (for selecting one of many choices)
+            <input type="checkbox"> Displays a checkbox (for selecting zero or more of many choices)
+            <input type="submit"> 	Displays a submit button (for submitting the form)
+            <input type="button"> 	Displays a clickable button
+        </form>
+    </div> -->
+
+    <div id="form-div">
+        <h2>Report Form</h2>
+        <form action="./form_submit.js" method="get">
+            <input type="text" name="intern-name" placeholder="your first and last name">
+            <input type="text" name="assigned-tasks" placeholder="list out your assigned tasks for the week">
+            <input type="text" name="completion-status" placeholder="did you complete these tasks? how did it go?">
+            <input type="file" name="deliverables" placeholder="attach a deliverable if available" id="deliverable-file">
+            <label for="deliverable-file">deliverable</label>
+            <input type="text" name="upcoming-goals" placeholder="what are your goals for the next week?">
+            <input type="text" name="challenges" placeholder="what challenges did you face this week?">
+            <input type="radio" name="pm-name" placeholder="who is your PM?" value="Zane">
+            <input type="radio" name="pm-name" placeholder="who is your PM?">
+            <input type="radio" name="pm-name" placeholder="who is your PM?">
+            <input type="radio" name="pm-name" placeholder="who is your PM?">
+            <input type="submit" name="submit-button" value="submit">
+        </form>
+    </div>
+    
+</body>
+</html>

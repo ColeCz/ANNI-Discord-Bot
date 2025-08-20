@@ -1,0 +1,204 @@
+<!-- admin_dashboard.html -->
+{% extends "forms/base.html" %}
+
+{% block title %}Admin Dashboard | ANNI{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1><i class="fas fa-cog me-2"></i>Admin Dashboard</h1>
+  <div>
+    <a href="/admin/" class="btn btn-secondary me-2">
+      <i class="fas fa-tools me-1"></i>Django Admin
+    </a>
+  </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+  <div class="col-md-3">
+    <div class="card bg-primary text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h4>{{ total_users }}</h4>
+            <p class="mb-0">Total Users</p>
+          </div>
+          <i class="fas fa-users fa-2x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card bg-info text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h4>{{ total_submissions }}</h4>
+            <p class="mb-0">Total Submissions</p>
+          </div>
+          <i class="fas fa-file-alt fa-2x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card bg-warning text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h4>{{ pending_submissions }}</h4>
+            <p class="mb-0">Pending Review</p>
+          </div>
+          <i class="fas fa-clock fa-2x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card bg-success text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h4>{{ submissions.object_list|length }}</h4>
+            <p class="mb-0">Showing Results</p>
+          </div>
+          <i class="fas fa-eye fa-2x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Filters and Search -->
+<div class="card mb-4">
+  <div class="card-body">
+    <form method="get" class="row g-3">
+      <div class="col-md-4">
+        <input type="text" class="form-control" name="search" placeholder="Search by user, title, or details" value="{{ search_query }}">
+      </div>
+      <div class="col-md-3">
+        <select name="status" class="form-select">
+          <option value="">All Statuses</option>
+          {% for status_key, status_display in status_choices %}
+            <option value="{{ status_key }}" {% if current_status == status_key %}selected{% endif %}>
+              {{ status_display }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">
+          <i class="fas fa-search me-1"></i>Filter
+        </button>
+      </div>
+      <div class="col-md-3">
+        <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary w-100">
+          <i class="fas fa-refresh me-1"></i>Clear Filters
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Submissions Table -->
+<div class="card">
+  <div class="card-header">
+    <h5><i class="fas fa-list me-2"></i>Form Submissions</h5>
+  </div>
+  <div class="card-body">
+    {% if submissions %}
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>User</th>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>File</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for submission in submissions %}
+            <tr>
+              <td>{{ submission.id }}</td>
+              <td>
+                <div>
+                  <strong>{{ submission.user.username }}</strong>
+                  {% if submission.user.first_name or submission.user.last_name %}
+                    <br><small class="text-muted">{{ submission.user.first_name }} {{ submission.user.last_name }}</small>
+                  {% endif %}
+                </div>
+              </td>
+              <td>
+                <div>
+                  <strong>{{ submission.name|truncatechars:40 }}</strong>
+                  {% if submission.details %}
+                    <br><small class="text-muted">{{ submission.details|truncatechars:60 }}</small>
+                  {% endif %}
+                </div>
+              </td>
+              <td>
+                <span class="badge bg-{% if submission.status == 'approved' %}success{% elif submission.status == 'rejected' %}danger{% elif submission.status == 'in_progress' %}info{% else %}warning{% endif %}">
+                  {{ submission.get_status_display }}
+                </span>
+              </td>
+              <td>{{ submission.created_at|date:"M d, Y H:i" }}</td>
+              <td>
+                {% if submission.file %}
+                  <a href="{{ submission.file.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-download"></i>
+                  </a>
+                {% else %}
+                  <span class="text-muted">No file</span>
+                {% endif %}
+              </td>
+              <td>
+                <a href="{% url 'admin_submission_detail' submission.id %}" class="btn btn-sm btn-primary">
+                  <i class="fas fa-edit"></i> Review
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Pagination -->
+      {% if submissions.has_other_pages %}
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+            {% if submissions.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ submissions.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}">&laquo; Previous</a>
+              </li>
+            {% endif %}
+            
+            {% for num in submissions.paginator.page_range %}
+              {% if submissions.number == num %}
+                <li class="page-item active">
+                  <span class="page-link">{{ num }}</span>
+                </li>
+              {% else %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}">{{ num }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+            
+            {% if submissions.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ submissions.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}">Next &raquo;</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      {% endif %}
+    {% else %}
+      <p class="text-muted text-center">No submissions found matching your criteria.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

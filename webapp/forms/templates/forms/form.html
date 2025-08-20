@@ -1,23 +1,73 @@
+<!-- Enhanced form.html -->
 {% extends "forms/base.html" %}
 
-{% block title %}Form | ANNI{% endblock %}
+{% block title %}Submit Form | ANNI{% endblock %}
 
 {% block content %}
-  <div class="form-container">
-    <h1>Submit Something</h1>
-    <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      <label for="name">Your Name:</label>
-      <input type="text" id="name" name="name" placeholder="Your name" />
-
-      <label for="details">Details:</label>
-      <textarea id="details" name="details" rows="6" placeholder="Enter details here"></textarea>
-
-      <label for="file">Upload a file:</label>
-      <input type="file" id="file" name="file" />
-
-      <button type="submit">Submit</button>
-    </form>
-    <a class="back-link" href="/">Back to Home</a>
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fas fa-file-plus me-2"></i>Submit New Form</h3>
+        <small class="text-muted">Fill out the form below to submit your request</small>
+      </div>
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="{{ form.name.id_for_label }}" class="form-label">{{ form.name.label }}</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+              <div class="text-danger small">{{ form.name.errors }}</div>
+            {% endif %}
+          </div>
+          
+          <div class="mb-3">
+            <label for="{{ form.details.id_for_label }}" class="form-label">{{ form.details.label }}</label>
+            {{ form.details }}
+            {% if form.details.errors %}
+              <div class="text-danger small">{{ form.details.errors }}</div>
+            {% endif %}
+            <small class="form-text text-muted">Please provide as much detail as possible to help us process your request.</small>
+          </div>
+          
+          <div class="mb-3">
+            <label for="{{ form.file.id_for_label }}" class="form-label">{{ form.file.label }}</label>
+            {{ form.file }}
+            {% if form.file.errors %}
+              <div class="text-danger small">{{ form.file.errors }}</div>
+            {% endif %}
+            <small class="form-text text-muted">Supported formats: PDF, DOC, DOCX, TXT, images (JPG, PNG). Max size: 10MB.</small>
+          </div>
+          
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="{% url 'user_dashboard' %}" class="btn btn-secondary">
+              <i class="fas fa-times me-1"></i>Cancel
+            </a>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-paper-plane me-1"></i>Submit Form
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Help Section -->
+    <div class="card mt-4">
+      <div class="card-header">
+        <h5><i class="fas fa-question-circle me-2"></i>Need Help?</h5>
+      </div>
+      <div class="card-body">
+        <p class="mb-2"><strong>What should I include in my submission?</strong></p>
+        <ul class="mb-3">
+          <li>A clear, descriptive title</li>
+          <li>Detailed explanation of your request</li>
+          <li>Any relevant files or documentation</li>
+          <li>Expected timeline (if applicable)</li>
+        </ul>
+        <p class="mb-0"><strong>Processing Time:</strong> Most submissions are reviewed within 1-2 business days. You'll receive a notification when your submission status changes.</p>
+      </div>
+    </div>
   </div>
+</div>
 {% endblock %}

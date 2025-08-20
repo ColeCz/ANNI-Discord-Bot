@@ -1,0 +1,149 @@
+<!-- profile.html -->
+{% extends "forms/base.html" %}
+
+{% block title %}Profile | ANNI{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-4">
+    <!-- Profile Summary -->
+    <div class="card">
+      <div class="card-header">
+        <h5><i class="fas fa-user me-2"></i>Profile Summary</h5>
+      </div>
+      <div class="card-body text-center">
+        <div class="mb-3">
+          <i class="fas fa-user-circle fa-5x text-muted"></i>
+        </div>
+        <h4>{{ user.first_name }} {{ user.last_name }}</h4>
+        <p class="text-muted">{{ user.username }}</p>
+        {% if profile.department %}
+          <p class="mb-1"><strong>Department:</strong> {{ profile.department }}</p>
+        {% endif %}
+        <p class="small text-muted">Member since {{ profile.created_at|date:"F Y" }}</p>
+      </div>
+    </div>
+    
+    <!-- Quick Stats -->
+    <div class="card mt-3">
+      <div class="card-header">
+        <h6>Your Activity</h6>
+      </div>
+      <div class="card-body">
+        <div class="row text-center">
+          <div class="col-6">
+            <h5 class="text-primary">{{ user.submissions.count }}</h5>
+            <small class="text-muted">Submissions</small>
+          </div>
+          <div class="col-6">
+            <h5 class="text-success">{{ user.submissions.approved.count }}</h5>
+            <small class="text-muted">Approved</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-8">
+    <!-- Profile Edit Form -->
+    <div class="card">
+      <div class="card-header">
+        <h5><i class="fas fa-edit me-2"></i>Edit Profile</h5>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          
+          <!-- User Information -->
+          <h6 class="border-bottom pb-2 mb-3">Basic Information</h6>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name</label>
+              {{ form.first_name }}
+              {% if form.first_name.errors %}
+                <div class="text-danger small">{{ form.first_name.errors }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.last_name.id_for_label }}" class="form-label">Last Name</label>
+              {{ form.last_name }}
+              {% if form.last_name.errors %}
+                <div class="text-danger small">{{ form.last_name.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+              <div class="text-danger small">{{ form.email.errors }}</div>
+            {% endif %}
+          </div>
+          
+          <!-- Profile Information -->
+          <h6 class="border-bottom pb-2 mb-3">Additional Information</h6>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.phone_number.id_for_label }}" class="form-label">Phone Number</label>
+              {{ form.phone_number }}
+              {% if form.phone_number.errors %}
+                <div class="text-danger small">{{ form.phone_number.errors }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.department.id_for_label }}" class="form-label">Department</label>
+              {{ form.department }}
+              {% if form.department.errors %}
+                <div class="text-danger small">{{ form.department.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="{{ form.bio.id_for_label }}" class="form-label">Bio</label>
+            {{ form.bio }}
+            {% if form.bio.errors %}
+              <div class="text-danger small">{{ form.bio.errors }}</div>
+            {% endif %}
+            <small class="form-text text-muted">Tell us a bit about yourself (optional)</small>
+          </div>
+          
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="{% url 'user_dashboard' %}" class="btn btn-secondary">
+              <i class="fas fa-times me-1"></i>Cancel
+            </a>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save me-1"></i>Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Account Settings -->
+    <div class="card mt-4">
+      <div class="card-header">
+        <h5><i class="fas fa-cog me-2"></i>Account Settings</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <h6>Change Password</h6>
+            <p class="text-muted small">Update your account password for security.</p>
+            <a href="{% url 'password_reset' %}" class="btn btn-outline-primary btn-sm">
+              <i class="fas fa-key me-1"></i>Change Password
+            </a>
+          </div>
+          <div class="col-md-6">
+            <h6>Account Information</h6>
+            <p class="text-muted small">Username: <strong>{{ user.username }}</strong></p>
+            <p class="text-muted small">Joined: {{ user.date_joined|date:"F d, Y" }}</p>
+            <p class="text-muted small">Last login: {{ user.last_login|date:"F d, Y H:i" }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

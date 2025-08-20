@@ -1,7 +1,166 @@
+<!-- Enhanced home.html -->
 {% extends "forms/base.html" %}
 
 {% block title %}Home | ANNI{% endblock %}
 
 {% block content %}
-  <h1>Welcome to the ANNI Bot Dashboard</h1>
+<div class="hero-section bg-primary text-white rounded p-5 mb-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h1 class="display-4 mb-3">
+          <i class="fas fa-robot me-3"></i>Welcome to ANNI Bot Dashboard
+        </h1>
+        <p class="lead mb-4">Your centralized platform for form submissions and administrative tasks. Streamline your workflow with our intuitive interface.</p>
+        {% if user.is_authenticated %}
+          <div class="d-flex gap-3">
+            <a href="{% url 'form' %}" class="btn btn-light btn-lg">
+              <i class="fas fa-plus me-2"></i>New Submission
+            </a>
+            <a href="{% url 'user_dashboard' %}" class="btn btn-outline-light btn-lg">
+              <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+            </a>
+          </div>
+        {% else %}
+          <div class="d-flex gap-3">
+            <a href="{% url 'register' %}" class="btn btn-light btn-lg">
+              <i class="fas fa-user-plus me-2"></i>Get Started
+            </a>
+            <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg">
+              <i class="fas fa-sign-in-alt me-2"></i>Login
+            </a>
+          </div>
+        {% endif %}
+      </div>
+      <div class="col-md-4 text-center">
+        <i class="fas fa-clipboard-list fa-8x opacity-50"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if user.is_authenticated %}
+  <!-- User Dashboard Preview -->
+  <div class="row mb-5">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5><i class="fas fa-file-alt me-2"></i>Recent Submissions</h5>
+          <a href="{% url 'user_dashboard' %}" class="btn btn-sm btn-primary">View All</a>
+        </div>
+        <div class="card-body">
+          {% if recent_submissions %}
+            {% for submission in recent_submissions %}
+              <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                <div>
+                  <h6 class="mb-1">{{ submission.name|truncatechars:50 }}</h6>
+                  <small class="text-muted">{{ submission.created_at|timesince }} ago</small>
+                </div>
+                <span class="badge bg-{% if submission.status == 'approved' %}success{% elif submission.status == 'rejected' %}danger{% elif submission.status == 'in_progress' %}info{% else %}warning{% endif %}">
+                  {{ submission.get_status_display }}
+                </span>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-muted text-center mb-0">No submissions yet. <a href="{% url 'form' %}">Create your first one!</a></p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5><i class="fas fa-bell me-2"></i>Notifications</h5>
+          {% if unread_notifications > 0 %}
+            <span class="badge bg-danger">{{ unread_notifications }}</span>
+          {% endif %}
+        </div>
+        <div class="card-body">
+          <div class="text-center">
+            <i class="fas fa-bell fa-3x text-muted mb-3"></i>
+            {% if unread_notifications > 0 %}
+              <p>You have <strong>{{ unread_notifications }}</strong> unread notification{{ unread_notifications|pluralize }}.</p>
+              <a href="{% url 'user_dashboard' %}" class="btn btn-primary btn-sm">
+                View Notifications
+              </a>
+            {% else %}
+              <p class="text-muted">No new notifications</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      
+      <div class="card mt-3">
+        <div class="card-header">
+          <h6>Quick Actions</h6>
+        </div>
+        <div class="card-body">
+          <div class="d-grid gap-2">
+            <a href="{% url 'form' %}" class="btn btn-outline-primary btn-sm">
+              <i class="fas fa-plus me-2"></i>New Submission
+            </a>
+            <a href="{% url 'profile' %}" class="btn btn-outline-secondary btn-sm">
+              <i class="fas fa-user me-2"></i>Edit Profile
+            </a>
+            {% if user.is_staff %}
+              <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-warning btn-sm">
+                <i class="fas fa-cog me-2"></i>Admin Panel
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% else %}
+  <!-- Features for Anonymous Users -->
+  <div class="row mb-5">
+    <div class="col-md-4">
+      <div class="card h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-file-plus fa-3x text-primary mb-3"></i>
+          <h5>Easy Form Submission</h5>
+          <p class="text-muted">Submit forms quickly and easily with our intuitive interface. Track your submissions in real-time.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-bell fa-3x text-primary mb-3"></i>
+          <h5>Real-time Notifications</h5>
+          <p class="text-muted">Get notified instantly when your submission status changes. Stay informed every step of the way.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+          <h5>Secure & Reliable</h5>
+          <p class="text-muted">Your data is secure with us. User authentication and admin controls ensure everything stays safe.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<!-- Getting Started Section -->
+{% if not user.is_authenticated %}
+<div class="card bg-light">
+  <div class="card-body text-center">
+    <h4>Ready to Get Started?</h4>
+    <p class="text-muted mb-4">Join thousands of users who trust ANNI for their form submission needs.</p>
+    <div class="d-flex justify-content-center gap-3">
+      <a href="{% url 'register' %}" class="btn btn-primary">
+        <i class="fas fa-user-plus me-2"></i>Create Account
+      </a>
+      <a href="{% url 'about' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-info-circle me-2"></i>Learn More
+      </a>
+    </div>
+  </div>
+</div>
+{% endif %}
 {% endblock %}
